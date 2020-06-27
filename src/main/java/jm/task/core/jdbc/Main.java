@@ -45,9 +45,8 @@ public class Main {
 
         for (int i = 0; i < userList.size(); i++) {
 
-//нужно переделать
-            System.out.print(userList.get(i).getId() + " " + userList.get(i).getName() + " " +
-                    userList.get(i).getLastName() + " " + userList.get(i).getAge());
+
+            System.out.print(userList.get(i).toString());
             System.out.println();
         }
 
