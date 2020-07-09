@@ -1,4 +1,10 @@
 package jm.task.core.jdbc.util;
+import org.hibernate.HibernateException;
+import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Configuration;
+import org.hibernate.service.ServiceRegistry;
+
+import org.hibernate.service.ServiceRegistryBuilder;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -28,5 +34,9 @@ public class Util {
                     password);
             return conn;
         }
+
+
+
+
 
 }

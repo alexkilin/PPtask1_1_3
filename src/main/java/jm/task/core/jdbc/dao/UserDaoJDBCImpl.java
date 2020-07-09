@@ -11,7 +11,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UserDaoJDBCImpl implements UserDao {
+
+    public Connection mySQLConnection;
+
     public UserDaoJDBCImpl() {
+
+        try {
+            this.mySQLConnection = Util.getMySQLConnection();
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -21,8 +30,8 @@ public class UserDaoJDBCImpl implements UserDao {
 
         Statement myStatement = null;
         try {
-            myStatement = Util.getMySQLConnection().createStatement();
-        } catch (SQLException | ClassNotFoundException e) {
+            myStatement = mySQLConnection.createStatement();
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         String sql = "CREATE TABLE IF NOT EXISTS Users (id BIGINT NOT NULL AUTO_INCREMENT," +
@@ -43,8 +52,8 @@ public class UserDaoJDBCImpl implements UserDao {
     public void dropUsersTable() {
         Statement myStatement = null;
         try {
-            myStatement = Util.getMySQLConnection().createStatement();
-        } catch (SQLException | ClassNotFoundException e) {
+            myStatement = mySQLConnection.createStatement();
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         String sql = " DROP TABLE IF EXISTS Users ";
@@ -62,8 +71,8 @@ public class UserDaoJDBCImpl implements UserDao {
 
         Statement myStatement = null;
         try {
-            myStatement = Util.getMySQLConnection().createStatement();
-        } catch (SQLException | ClassNotFoundException e) {
+            myStatement = mySQLConnection.createStatement();
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         String sql = " INSERT INTO Users (name, lastName, age) \n" +
@@ -85,8 +94,8 @@ public class UserDaoJDBCImpl implements UserDao {
 
         Statement myStatement = null;
         try {
-            myStatement = Util.getMySQLConnection().createStatement();
-        } catch (SQLException | ClassNotFoundException e) {
+            myStatement = mySQLConnection.createStatement();
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         String sql = "DELETE FROM Users WHERE id = '"+ id + "'";
@@ -107,8 +116,8 @@ public class UserDaoJDBCImpl implements UserDao {
 
         Statement myStatement = null;
         try {
-            myStatement = Util.getMySQLConnection().createStatement();
-        } catch (SQLException | ClassNotFoundException e) {
+            myStatement = mySQLConnection.createStatement();
+        } catch (SQLException  e) {
             e.printStackTrace();
         }
 
@@ -142,8 +151,8 @@ public class UserDaoJDBCImpl implements UserDao {
 
         Statement myStatement = null;
         try {
-            myStatement = Util.getMySQLConnection().createStatement();
-        } catch (SQLException | ClassNotFoundException e) {
+            myStatement = mySQLConnection.createStatement();
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         String sql = " DELETE FROM Users ";
