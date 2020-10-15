@@ -3,10 +3,7 @@ package jm.task.core.jdbc.dao;
 import jm.task.core.jdbc.model.User;
 import jm.task.core.jdbc.util.Util;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,53 +11,29 @@ public class UserDaoJDBCImpl implements UserDao {
 
     public Connection mySQLConnection;
 
-    public UserDaoJDBCImpl() {
 
+    public UserDaoJDBCImpl() {
         try {
             this.mySQLConnection = Util.getMySQLConnection();
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
         }
-
     }
-
-
-
     public void createUsersTable() {
-
-        Statement myStatement = null;
-        try {
-            myStatement = mySQLConnection.createStatement();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
         String sql = "CREATE TABLE IF NOT EXISTS Users (id BIGINT NOT NULL AUTO_INCREMENT," +
                 " name VARCHAR(40) NOT NULL, lastName VARCHAR(40) NOT NULL," +
                 " age TINYINT,PRIMARY KEY (id))";
-
-
         try {
-            myStatement.executeUpdate(sql);
+            mySQLConnection.createStatement().executeUpdate(sql);
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
-
-
     }
 
     public void dropUsersTable() {
-        Statement myStatement = null;
-        try {
-            myStatement = mySQLConnection.createStatement();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
         String sql = " DROP TABLE IF EXISTS Users ";
-
-
         try {
-            myStatement.executeUpdate(sql);
+            mySQLConnection.createStatement().executeUpdate(sql);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -68,21 +41,14 @@ public class UserDaoJDBCImpl implements UserDao {
 
     public void saveUser(String name, String lastName, byte age) {
 
-
-        Statement myStatement = null;
+        String sql = " INSERT INTO Users (name, lastName, age) values (?,?,?)";
         try {
-            myStatement = mySQLConnection.createStatement();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        String sql = " INSERT INTO Users (name, lastName, age) \n" +
-    "VALUES ('"+ name + "','" + lastName +"'," + age + ");";
-
-      //  System.out.println(sql);
-
-        try {
-            myStatement.executeUpdate(sql);
-
+        PreparedStatement pst = mySQLConnection.prepareStatement(sql);
+        pst.setString(1,name);
+        pst.setString(2,lastName);
+        pst.setByte(3,age);
+        pst.executeUpdate();
+        pst.close();
             System.out.println("User c именем " + name + " добавлен в базу данных");
         } catch (SQLException e) {
             e.printStackTrace();
@@ -91,78 +57,64 @@ public class UserDaoJDBCImpl implements UserDao {
     }
 
     public void removeUserById(long id) {
-
-        Statement myStatement = null;
+        String sql = "DELETE FROM Users WHERE id = ?";
         try {
-            myStatement = mySQLConnection.createStatement();
+            PreparedStatement pst = mySQLConnection.prepareStatement(sql);
+            pst.setLong(1,id);
+            pst.executeUpdate();
+            pst.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        String sql = "DELETE FROM Users WHERE id = '"+ id + "'";
-
-
-        try {
-            myStatement.executeUpdate(sql);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
 
     }
 
     public List<User> getAllUsers() {
+        String sql = "Select id, name, lastName, age from Users";
+    List<User> userArrayList = new ArrayList<>();
+    Statement myStatement = null;
+        try {
+        myStatement = mySQLConnection.createStatement();
+        ResultSet rs = myStatement.executeQuery(sql);
+        while (rs.next()) {
+            Long id = rs.getLong(1);
+            String name = rs.getString(2);
+            String LastName = rs.getString(3);
+            byte age = rs.getByte(4);
+            User currentUser = new User(name, LastName, age);
+            currentUser.setId(id);
+            userArrayList.add(currentUser);
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+        return userArrayList;
+}
 
-        List<User> userArrayList = new ArrayList<>();
+    public void printAllUsersFromTable (){
+        System.out.println(" Таблица Users : ");
 
+        String sql = "Select * from Users";
         Statement myStatement = null;
         try {
             myStatement = mySQLConnection.createStatement();
-        } catch (SQLException  e) {
-            e.printStackTrace();
-        }
-
-        String sql = "Select id, name, lastName, age from Users";
-
-        try {
-            ResultSet rs = myStatement.executeQuery (sql);
-
+            ResultSet rs = myStatement.executeQuery(sql);
             while (rs.next()) {
-
-                Long id = rs.getLong(1);
-                String name = rs.getString(2);
-                String LastName = rs.getString(3);
-                byte age = rs.getByte(4);
-
-                User currentUser = new User(name,LastName,age);
-                currentUser.setId(id);
-
-                userArrayList.add(currentUser);
-
+                System.out.println(rs.getLong(1) + " " + rs.getString(2) + " " +
+                        rs.getString(3) + " " + rs.getByte(4));
             }
-
+            myStatement.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
-        return userArrayList;
     }
 
     public void cleanUsersTable() {
-
-        Statement myStatement = null;
-        try {
-            myStatement = mySQLConnection.createStatement();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
         String sql = " DELETE FROM Users ";
-
-
         try {
-            myStatement.executeUpdate(sql);
+            mySQLConnection.createStatement().executeUpdate(sql);
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
     }
 }

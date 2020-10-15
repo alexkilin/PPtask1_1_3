@@ -1,0 +1,101 @@
+1-Как получить все записи из одной таблицы в JDBC?
+"SELECT * from User", ResultSet, rs.getString(var1), (rs.getDouble(var2),rs.next
+
+2-Что такое JPA?
+
+JAVA Persistance API - програмный интерфейс для реализации принципов ORM
+(т.е. набор интерфейсов и классов, позволящих реализовать ORM)
+
+3-Обязательны ли аннотации @Column и @Table?
+да
+4-Как замапить объект на таблицу и наоборот в Hibernate?
+@Entity
+@Table
+
+5-Что делать, если я не хочу сохранять какое-то поле в БД?
+@Transient
+
+6-В чем разница между JPA и Hibernate? Как связаны все эти понятия?
+JPA Java Persistence API - набор классов и интерфейсов для работы ORM. Hibernate - ORM.
+
+7-Как достать все записи из таблицы используя Hibernate (Query)?
+
+1 вар.
+
+session.createQuery("from user");
+myList = query.list();
+
+2 вар.
+Criteria criteria = session.createCriteria(User.class);
+        userArrayList =(List<User>) criteria.list();
+
+
+8-Как передать в Query параметры?
+qwery.setParameter(param, value)
+
+9-Чем HQL отличается от SQL?
+Объектно ориентирован. использует имена полей сущностей, а не таблиц.
+
+10-criteria api плюсы и минусы?
+плюсы:
+- можно использовать ряд различных ограничений;
+- поддерживает сортировку;
+- для динамических запросов (ошибки только на стадии исполнения)
+
+
+11-Конфигурирование Hibernate в коде?
+1.Объект класса configyration-> (задаем параметры) методом .setProperty
+2.добавить аннотированный класс .addAnnotatedClass
+3.Объект класса ServiceRegistry (через объект standartServiceRegistryBuilder)
+4.sessionFactory (метод buildSessionFactory (передать serviceRegistry))
+
+
+Пример:
+Configuration configuration = new org.hibernate.cfg.Configuration();
+
+            configuration.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQLDialect")
+                    .setProperty("hibernate.connection.driver_class", "com.mysql.jdbc.Driver")
+                    .setProperty("hibernate.connection.url", "jdbc:mysql://localHost:3306/example2")
+                    .setProperty("hibernate.connection.username", "root")
+                    .setProperty("hibernate.connection.password", "forest")
+                    .setProperty("hibernate.show_sql", "true")
+                    .setProperty("hibernate.hbm2ddl.auto", "update");
+
+
+            configuration.addAnnotatedClass(User.class);
+            ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
+                    .applySettings(configuration.getProperties()).build();
+
+            SessionFactory sessionFactory = configuration.buildSessionFactory(serviceRegistry);
+
+12-Основные методы Hibernate?
+sessionFactory.openSession
+.close
+
+session.close
+session.load
+.save
+.delete
+.get
+.
+.createQuery
+query.executeUpdate
+.list
+.addParameter();
+.uniqueResult();
+
+
+13-Жизненный цикл Entity в Hibernate?
+new
+managed
+detached
+removed
+
+14-кэш 1 уровня?
+
+15-что такое синглтон и когда применять?
+
+
+16-паттерн фабрика?
+
+17-принцип  asid? (edited)
