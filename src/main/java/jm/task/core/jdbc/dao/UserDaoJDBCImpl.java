@@ -1,8 +1,6 @@
 package jm.task.core.jdbc.dao;
-
 import jm.task.core.jdbc.model.User;
 import jm.task.core.jdbc.util.Util;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -87,12 +85,9 @@ public class UserDaoJDBCImpl implements UserDao {
         return userArrayList;
 }
 
-
-
     public void cleanUsersTable() {
-        String sql = " DELETE FROM Users ";
         try {
-            mySQLConnection.createStatement().executeUpdate(sql);
+            mySQLConnection.createStatement().executeUpdate(" DELETE FROM Users ");
         } catch (SQLException e) {
             e.printStackTrace();
         }
