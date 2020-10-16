@@ -31,19 +31,17 @@ public class UserDaoJDBCImpl implements UserDao {
     }
 
     public void dropUsersTable() {
-        String sql = " DROP TABLE IF EXISTS Users ";
         try {
-            mySQLConnection.createStatement().executeUpdate(sql);
+            mySQLConnection.createStatement().executeUpdate(" DROP TABLE IF EXISTS Users ");
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
     public void saveUser(String name, String lastName, byte age) {
-
-        String sql = " INSERT INTO Users (name, lastName, age) values (?,?,?)";
         try {
-        PreparedStatement pst = mySQLConnection.prepareStatement(sql);
+        PreparedStatement pst = mySQLConnection.prepareStatement(" INSERT INTO Users (name, lastName, age) " +
+                "values (?,?,?)");
         pst.setString(1,name);
         pst.setString(2,lastName);
         pst.setByte(3,age);
@@ -57,9 +55,8 @@ public class UserDaoJDBCImpl implements UserDao {
     }
 
     public void removeUserById(long id) {
-        String sql = "DELETE FROM Users WHERE id = ?";
         try {
-            PreparedStatement pst = mySQLConnection.prepareStatement(sql);
+            PreparedStatement pst = mySQLConnection.prepareStatement("DELETE FROM Users WHERE id = ?");
             pst.setLong(1,id);
             pst.executeUpdate();
             pst.close();
@@ -70,12 +67,11 @@ public class UserDaoJDBCImpl implements UserDao {
     }
 
     public List<User> getAllUsers() {
-        String sql = "Select id, name, lastName, age from Users";
     List<User> userArrayList = new ArrayList<>();
     Statement myStatement = null;
         try {
         myStatement = mySQLConnection.createStatement();
-        ResultSet rs = myStatement.executeQuery(sql);
+        ResultSet rs = myStatement.executeQuery("Select id, name, lastName, age from Users");
         while (rs.next()) {
             Long id = rs.getLong(1);
             String name = rs.getString(2);
@@ -91,23 +87,7 @@ public class UserDaoJDBCImpl implements UserDao {
         return userArrayList;
 }
 
-    public void printAllUsersFromTable (){
-        System.out.println(" Таблица Users : ");
 
-        String sql = "Select * from Users";
-        Statement myStatement = null;
-        try {
-            myStatement = mySQLConnection.createStatement();
-            ResultSet rs = myStatement.executeQuery(sql);
-            while (rs.next()) {
-                System.out.println(rs.getLong(1) + " " + rs.getString(2) + " " +
-                        rs.getString(3) + " " + rs.getByte(4));
-            }
-            myStatement.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
 
     public void cleanUsersTable() {
         String sql = " DELETE FROM Users ";

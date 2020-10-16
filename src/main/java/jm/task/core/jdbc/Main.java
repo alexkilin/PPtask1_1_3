@@ -15,10 +15,9 @@ public class Main {
         userServiceImpl.saveUser(user2.getName(), user2.getLastName(), user2.getAge());
         userServiceImpl.saveUser(user3.getName(), user3.getLastName(), user3.getAge());
         userServiceImpl.saveUser(user4.getName(), user4.getLastName(), user4.getAge());
-        List<User> userList = userServiceImpl.getAllUsers();
-        for (int i = 0; i < userList.size(); i++) {
-            System.out.println(userList.get(i).toString());
-        }
+
+        userServiceImpl.printAllUsersFromTable();
+
         userServiceImpl.cleanUsersTable();
         userServiceImpl.dropUsersTable();
     }
